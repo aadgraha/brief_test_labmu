@@ -30,7 +30,6 @@ class PokemonFetchBloc extends Bloc<PokemonFetchEvent, PokemonFetchState> {
 
             emit(PokemonFetchState.success(pokemons: pokemons));
           } catch (error) {
-            print(error.toString());
             emit(PokemonFetchState.failure(message: error.toString()));
           }
         },

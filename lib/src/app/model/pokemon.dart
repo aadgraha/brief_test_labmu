@@ -28,6 +28,7 @@ class Pokemon {
   final String evolvedFrom;
   final String reason;
   final String baseExp;
+  final bool isFavorite;
 
   const Pokemon({
     required this.name,
@@ -57,6 +58,7 @@ class Pokemon {
     required this.evolvedFrom,
     required this.reason,
     required this.baseExp,
+    this.isFavorite = false
   });
 
   factory Pokemon.fromJson(Map<String, dynamic> json) {
@@ -122,6 +124,68 @@ class Pokemon {
       'base_exp': baseExp,
     };
   }
+
+  Pokemon copyWith({
+  String? name,
+  String? id,
+  String? imageUrl,
+  String? xDescription,
+  String? yDescription,
+  String? height,
+  String? category,
+  String? weight,
+  List<String>? typeOfPokemon,
+  List<String>? weaknesses,
+  List<String>? evolutions,
+  List<String>? abilities,
+  int? hp,
+  int? attack,
+  int? defense,
+  int? specialAttack,
+  int? specialDefense,
+  int? speed,
+  int? total,
+  String? malePercentage,
+  String? femalePercentage,
+  int? genderless,
+  String? cycles,
+  String? eggGroups,
+  String? evolvedFrom,
+  String? reason,
+  String? baseExp,
+  bool? isFavorite,
+}) {
+  return Pokemon(
+    name: name ?? this.name,
+    id: id ?? this.id,
+    imageUrl: imageUrl ?? this.imageUrl,
+    xDescription: xDescription ?? this.xDescription,
+    yDescription: yDescription ?? this.yDescription,
+    height: height ?? this.height,
+    category: category ?? this.category,
+    weight: weight ?? this.weight,
+    typeOfPokemon: typeOfPokemon ?? this.typeOfPokemon,
+    weaknesses: weaknesses ?? this.weaknesses,
+    evolutions: evolutions ?? this.evolutions,
+    abilities: abilities ?? this.abilities,
+    hp: hp ?? this.hp,
+    attack: attack ?? this.attack,
+    defense: defense ?? this.defense,
+    specialAttack: specialAttack ?? this.specialAttack,
+    specialDefense: specialDefense ?? this.specialDefense,
+    speed: speed ?? this.speed,
+    total: total ?? this.total,
+    malePercentage: malePercentage ?? this.malePercentage,
+    femalePercentage: femalePercentage ?? this.femalePercentage,
+    genderless: genderless ?? this.genderless,
+    cycles: cycles ?? this.cycles,
+    eggGroups: eggGroups ?? this.eggGroups,
+    evolvedFrom: evolvedFrom ?? this.evolvedFrom,
+    reason: reason ?? this.reason,
+    baseExp: baseExp ?? this.baseExp,
+    isFavorite: isFavorite ?? this.isFavorite,
+  );
+}
 }
 
 enum PokemonType {

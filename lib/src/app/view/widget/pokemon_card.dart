@@ -3,8 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PokemonCard extends StatelessWidget {
-  const PokemonCard({super.key, required this.pokemon});
+  const PokemonCard({
+    super.key,
+    required this.pokemon,
+    required this.isFavorite,
+  });
   final Pokemon pokemon;
+  final bool isFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +47,41 @@ class PokemonCard extends StatelessWidget {
               ],
             ),
           ),
+          // Expanded(
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.all(Radius.circular(15)),
+          //       color: pokemon.typeOfPokemon.first.pokemonType.color,
+          //     ),
+          //     child: CachedNetworkImage(imageUrl: pokemon.imageUrl),
+          //   ),
+          // ),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: pokemon.typeOfPokemon.first.pokemonType.color,
-              ),
-              child: CachedNetworkImage(imageUrl: pokemon.imageUrl),
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: pokemon.typeOfPokemon.first.pokemonType.color,
+                  ),
+                ),
+
+                Center(child: CachedNetworkImage(imageUrl: pokemon.imageUrl)),
+
+                Positioned(
+                  top: -7,
+                  right: -7,
+                  child: IconButton(
+                    onPressed: () {
+                      
+                    },
+                    icon: Icon(
+                      Icons.favorite,
+                      color: pokemon.isFavorite ? Colors.red : Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
