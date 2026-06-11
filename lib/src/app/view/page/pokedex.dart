@@ -57,7 +57,9 @@ class _PokedexPageState extends State<PokedexPage> {
                     child: ListView(
                       children: [
                         PokemonTypeButton(
-                          activeLabel: _searchType.toUpperCase(),
+                          activeLabel: _searchType.isEmpty
+                              ? 'ALLTYPE'
+                              : _searchType.toUpperCase(),
                           onTap: (type) {
                             if (type.name == 'alltype') {
                               _searchType = '';

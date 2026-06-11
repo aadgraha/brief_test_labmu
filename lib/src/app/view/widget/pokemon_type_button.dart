@@ -24,7 +24,7 @@ enum PokemonType {
 class PokemonTypeButton extends StatelessWidget {
   const PokemonTypeButton({super.key, this.onTap, required this.activeLabel});
   final void Function(PokemonType)? onTap;
-  final String? activeLabel;
+  final String activeLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class PokemonTypeButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              activeLabel ?? 'ALLTYPE',
+              activeLabel,
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             const Icon(Icons.filter_list, color: Colors.white),
@@ -62,3 +62,5 @@ class PokemonTypeButton extends StatelessWidget {
     );
   }
 }
+
+//optimise chced, bookmark fitur
