@@ -1,5 +1,7 @@
 import 'package:brief_test_labmu/src/app/bloc/pokemon_fetch/pokemon_fetch_bloc.dart';
+import 'package:brief_test_labmu/src/app/model/pokemon.dart';
 import 'package:brief_test_labmu/src/app/view/widget/pokemon_card.dart';
+import 'package:brief_test_labmu/src/app/view/widget/pokemon_type_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,6 +14,7 @@ class PokedexPage extends StatefulWidget {
 
 class _PokedexPageState extends State<PokedexPage> {
   var _searchValue = '';
+  var _searchType = '';
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PokemonFetchBloc, PokemonFetchState>(
@@ -21,15 +24,22 @@ class _PokedexPageState extends State<PokedexPage> {
             initial: () => const SizedBox(),
             loading: () => const Center(child: CircularProgressIndicator()),
             success: (pokemons) {
-              final filteredPokemons = _searchValue.isEmpty
-                  ? pokemons
-                  : pokemons
-                        .where(
-                          (e) => e.name.toLowerCase().contains(
-                            _searchValue.toLowerCase(),
-                          ),
-                        )
-                        .toList();
+              final filteredPokemons = pokemons.where((pokemon) {
+                final matchesName =
+                    _searchValue.isEmpty ||
+                    pokemon.name.toLowerCase().contains(
+                      _searchValue.toLowerCase(),
+                    );
+
+                final matchesType =
+                    _searchType.isEmpty ||
+                    _searchType == 'alltype' ||
+                    pokemon.typeOfPokemon.any(
+                      (type) => type.toLowerCase() == _searchType.toLowerCase(),
+                    );
+
+                return matchesName && matchesType;
+              }).toList()..sort((a, b) => a.id.compareTo(b.id));
 
               return Column(
                 children: [
@@ -45,9 +55,31 @@ class _PokedexPageState extends State<PokedexPage> {
                   ),
                   Expanded(
                     child: ListView(
-                      children: filteredPokemons.map((e) {
-                        return PokemonCard(pokemon: e, isFavorite: true);
-                      }).toList(),
+                      children: [
+                        PokemonTypeButton(
+                          activeLabel: _searchType.toUpperCase(),
+                          onTap: (type) {
+                            if (type.name == 'alltype') {
+                              _searchType = '';
+                            } else {
+                              _searchType = type.name.toLowerCase();
+                            }
+                            setState(() {});
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        ...filteredPokemons.map((e) {
+                          final evoIds = e.evolutions.toSet();
+                          final evolutionPokemons = pokemons
+                              .where((pokemon) => evoIds.contains(pokemon.id))
+                              .toList();
+                          return PokemonCard(
+                            pokemon: e,
+                            isFavorite: true,
+                            evolution: evolutionPokemons,
+                          );
+                        }),
+                      ],
                     ),
                   ),
                 ],
