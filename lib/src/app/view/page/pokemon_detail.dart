@@ -18,8 +18,8 @@ class PokemonDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SafeArea(
+    return Scaffold(
+      body: SafeArea(
         child: Column(
           children: [
             Container(
@@ -42,8 +42,25 @@ class PokemonDetailPage extends StatelessWidget {
 
                       return IconButton(
                         onPressed: () {
+                          final isFavorite = pokemonFavoriteBloc.state.pokemons
+                              .any((e) => e.id == pokemon.id);
+
                           pokemonFavoriteBloc.add(
                             PokemonFavoriteEvent.toggle(pokemon: pokemon),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isFavorite
+                                    ? '${pokemon.name} removed from favorites'
+                                    : '${pokemon.name} added to favorites',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                          debugPrint(
+                            ScaffoldMessenger.maybeOf(context).toString(),
                           );
                         },
                         icon: Icon(

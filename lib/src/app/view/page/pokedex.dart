@@ -28,7 +28,11 @@ class _PokedexPageState extends State<PokedexPage> {
                     _searchValue.isEmpty ||
                     pokemon.name.toLowerCase().contains(
                       _searchValue.toLowerCase(),
-                    );
+                    ) ||
+                    pokemon.typeOfPokemon
+                        .join("")
+                        .toLowerCase()
+                        .contains(_searchValue.toLowerCase());
 
                 final matchesType =
                     _searchType.isEmpty ||

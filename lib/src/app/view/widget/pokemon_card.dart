@@ -70,26 +70,43 @@ class PokemonCard extends StatelessWidget {
                   Positioned(
                     top: -7,
                     right: -7,
-                    child:
-                        BlocBuilder<PokemonFavoriteBloc, PokemonFavoriteState>(
-                          builder: (context, state) {
+                    child: BlocBuilder<PokemonFavoriteBloc, PokemonFavoriteState>(
+                      builder: (context, state) {
+                        final favoriteBloc = context
+                            .read<PokemonFavoriteBloc>();
+                        return IconButton(
+                          onPressed: () {
                             final favoriteBloc = context
                                 .read<PokemonFavoriteBloc>();
-                            return IconButton(
-                              onPressed: () {
-                                context.read<PokemonFavoriteBloc>().add(
-                                  PokemonFavoriteEvent.toggle(pokemon: pokemon),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.favorite,
-                                color: favoriteBloc.isFavorite(pokemon.id)
-                                    ? Colors.red
-                                    : Colors.white,
+
+                            final isFavorite = favoriteBloc.state.pokemons.any(
+                              (e) => e.id == pokemon.id,
+                            );
+
+                            favoriteBloc.add(
+                              PokemonFavoriteEvent.toggle(pokemon: pokemon),
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  isFavorite
+                                      ? '${pokemon.name} removed from favorites'
+                                      : '${pokemon.name} added to favorites',
+                                ),
+                                duration: const Duration(seconds: 1),
                               ),
                             );
                           },
-                        ),
+                          icon: Icon(
+                            Icons.favorite,
+                            color: favoriteBloc.isFavorite(pokemon.id)
+                                ? Colors.red
+                                : Colors.white,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
