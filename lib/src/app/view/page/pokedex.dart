@@ -1,5 +1,4 @@
 import 'package:brief_test_labmu/src/app/bloc/pokemon_fetch/pokemon_fetch_bloc.dart';
-import 'package:brief_test_labmu/src/app/model/pokemon.dart';
 import 'package:brief_test_labmu/src/app/view/widget/pokemon_card.dart';
 import 'package:brief_test_labmu/src/app/view/widget/pokemon_type_button.dart';
 import 'package:flutter/material.dart';
@@ -44,44 +43,61 @@ class _PokedexPageState extends State<PokedexPage> {
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsetsGeometry.all(5),
+                    padding: EdgeInsetsGeometry.all(10),
                     child: TextField(
                       onChanged: (value) {
                         _searchValue = value;
                         setState(() {});
                       },
-                      decoration: InputDecoration(hint: Text('Search')),
+                      decoration: InputDecoration(
+                        hintText: 'Search Pokémon',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: ListView(
-                      children: [
-                        PokemonTypeButton(
-                          activeLabel: _searchType.isEmpty
-                              ? 'ALLTYPE'
-                              : _searchType.toUpperCase(),
-                          onTap: (type) {
-                            if (type.name == 'alltype') {
-                              _searchType = '';
-                            } else {
-                              _searchType = type.name.toLowerCase();
-                            }
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        ...filteredPokemons.map((e) {
-                          final evoIds = e.evolutions.toSet();
-                          final evolutionPokemons = pokemons
-                              .where((pokemon) => evoIds.contains(pokemon.id))
-                              .toList();
-                          return PokemonCard(
-                            pokemon: e,
-                            isFavorite: true,
-                            evolution: evolutionPokemons,
-                          );
-                        }),
-                      ],
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<PokemonFetchBloc>().add(
+                          const PokemonFetchEvent.refresh(),
+                        );
+                      },
+                      child: ListView(
+                        children: [
+                          PokemonTypeButton(
+                            activeLabel: _searchType.isEmpty
+                                ? 'ALLTYPE'
+                                : _searchType.toUpperCase(),
+                            onTap: (type) {
+                              if (type.name == 'alltype') {
+                                _searchType = '';
+                              } else {
+                                _searchType = type.name.toLowerCase();
+                              }
+                              setState(() {});
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          ...filteredPokemons.map((e) {
+                            final evoIds = e.evolutions.toSet();
+                            final evolutionPokemons = pokemons
+                                .where((pokemon) => evoIds.contains(pokemon.id))
+                                .toList();
+                            return PokemonCard(
+                              pokemon: e,
+                              isFavorite: true,
+                              evolution: evolutionPokemons,
+                            );
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                 ],

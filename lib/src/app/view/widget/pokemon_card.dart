@@ -1,7 +1,9 @@
+import 'package:brief_test_labmu/src/app/bloc/pokemon_favorite/pokemon_favorite_bloc.dart';
 import 'package:brief_test_labmu/src/app/model/pokemon.dart';
 import 'package:brief_test_labmu/src/app/view/page/pokemon_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PokemonCard extends StatelessWidget {
   const PokemonCard({
@@ -18,11 +20,15 @@ class PokemonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        final pokemonFavoriteBloc = context.read<PokemonFavoriteBloc>();
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PokemonDetailPage(pokemon: pokemon, evolution: evolution),
+            builder: (context) => PokemonDetailPage(
+              pokemon: pokemon,
+              evolution: evolution,
+              pokemonFavoriteBloc: pokemonFavoriteBloc,
+            ),
           ),
         );
       },
@@ -43,32 +49,12 @@ class PokemonCard extends StatelessWidget {
                   Text(pokemon.name, style: TextStyle(fontSize: 24)),
                   Row(
                     children: pokemon.typeOfPokemon
-                        .map(
-                          (e) => ElementSymbol(
-                            pokemonType: e.pokemonType,
-                            assetName: '',
-                            elementName: '',
-                          ),
-                        )
+                        .map((e) => ElementSymbol(pokemonType: e.pokemonType))
                         .toList(),
                   ),
-                  // ElementSymbol(
-                  //   pokemonType: pokemon.typeOfPokemon.first.pokemonType,
-                  //   assetName: '',
-                  //   elementName: '',
-                  // ),
                 ],
               ),
             ),
-            // Expanded(
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.all(Radius.circular(15)),
-            //       color: pokemon.typeOfPokemon.first.pokemonType.color,
-            //     ),
-            //     child: CachedNetworkImage(imageUrl: pokemon.imageUrl),
-            //   ),
-            // ),
             Expanded(
               child: Stack(
                 children: [
@@ -84,13 +70,26 @@ class PokemonCard extends StatelessWidget {
                   Positioned(
                     top: -7,
                     right: -7,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.favorite,
-                        color: pokemon.isFavorite ? Colors.red : Colors.white,
-                      ),
-                    ),
+                    child:
+                        BlocBuilder<PokemonFavoriteBloc, PokemonFavoriteState>(
+                          builder: (context, state) {
+                            final favoriteBloc = context
+                                .read<PokemonFavoriteBloc>();
+                            return IconButton(
+                              onPressed: () {
+                                context.read<PokemonFavoriteBloc>().add(
+                                  PokemonFavoriteEvent.toggle(pokemon: pokemon),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.favorite,
+                                color: favoriteBloc.isFavorite(pokemon.id)
+                                    ? Colors.red
+                                    : Colors.white,
+                              ),
+                            );
+                          },
+                        ),
                   ),
                 ],
               ),
@@ -103,15 +102,8 @@ class PokemonCard extends StatelessWidget {
 }
 
 class ElementSymbol extends StatelessWidget {
-  const ElementSymbol({
-    super.key,
-    required this.pokemonType,
-    required this.assetName,
-    required this.elementName,
-  });
+  const ElementSymbol({super.key, required this.pokemonType});
   final PokemonType pokemonType;
-  final String assetName;
-  final String elementName;
 
   @override
   Widget build(BuildContext context) {

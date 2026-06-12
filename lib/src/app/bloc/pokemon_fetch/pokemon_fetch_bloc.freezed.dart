@@ -435,11 +435,12 @@ extension PokemonFetchEventPatterns on PokemonFetchEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Get value)?  get,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Get value)?  get,TResult Function( _Refresh value)?  refresh,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Get() when get != null:
-return get(_that);case _:
+return get(_that);case _Refresh() when refresh != null:
+return refresh(_that);case _:
   return orElse();
 
 }
@@ -457,11 +458,12 @@ return get(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Get value)  get,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Get value)  get,required TResult Function( _Refresh value)  refresh,}){
 final _that = this;
 switch (_that) {
 case _Get():
-return get(_that);case _:
+return get(_that);case _Refresh():
+return refresh(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -478,11 +480,12 @@ return get(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Get value)?  get,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Get value)?  get,TResult? Function( _Refresh value)?  refresh,}){
 final _that = this;
 switch (_that) {
 case _Get() when get != null:
-return get(_that);case _:
+return get(_that);case _Refresh() when refresh != null:
+return refresh(_that);case _:
   return null;
 
 }
@@ -499,10 +502,11 @@ return get(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  get,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  get,TResult Function()?  refresh,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Get() when get != null:
-return get();case _:
+return get();case _Refresh() when refresh != null:
+return refresh();case _:
   return orElse();
 
 }
@@ -520,10 +524,11 @@ return get();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  get,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  get,required TResult Function()  refresh,}) {final _that = this;
 switch (_that) {
 case _Get():
-return get();case _:
+return get();case _Refresh():
+return refresh();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -540,10 +545,11 @@ return get();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  get,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  get,TResult? Function()?  refresh,}) {final _that = this;
 switch (_that) {
 case _Get() when get != null:
-return get();case _:
+return get();case _Refresh() when refresh != null:
+return refresh();case _:
   return null;
 
 }
@@ -575,6 +581,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'PokemonFetchEvent.get()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Refresh implements PokemonFetchEvent {
+  const _Refresh();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Refresh);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'PokemonFetchEvent.refresh()';
 }
 
 

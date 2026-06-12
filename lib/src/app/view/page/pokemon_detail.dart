@@ -1,16 +1,20 @@
+import 'package:brief_test_labmu/src/app/bloc/pokemon_favorite/pokemon_favorite_bloc.dart';
 import 'package:brief_test_labmu/src/app/model/pokemon.dart';
 import 'package:brief_test_labmu/src/app/view/widget/pokemon_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PokemonDetailPage extends StatelessWidget {
   const PokemonDetailPage({
     super.key,
     required this.pokemon,
     required this.evolution,
+    required this.pokemonFavoriteBloc,
   });
   final Pokemon pokemon;
   final List<Pokemon> evolution;
+  final PokemonFavoriteBloc pokemonFavoriteBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +33,25 @@ class PokemonDetailPage extends StatelessWidget {
                     },
                     icon: Icon(Icons.chevron_left, color: Colors.white),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.favorite,
-                      color: pokemon.isFavorite ? Colors.red : Colors.grey,
-                    ),
+                  BlocBuilder<PokemonFavoriteBloc, PokemonFavoriteState>(
+                    bloc: pokemonFavoriteBloc,
+                    builder: (context, state) {
+                      final isFavorite = pokemonFavoriteBloc.isFavorite(
+                        pokemon.id,
+                      );
+
+                      return IconButton(
+                        onPressed: () {
+                          pokemonFavoriteBloc.add(
+                            PokemonFavoriteEvent.toggle(pokemon: pokemon),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.favorite,
+                          color: isFavorite ? Colors.red : Colors.white,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -58,7 +75,7 @@ class PokemonDetailPage extends StatelessWidget {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        child: Container(
+                        child: SizedBox(
                           height: 130,
                           width: 130,
                           child: CachedNetworkImage(imageUrl: pokemon.imageUrl),
@@ -74,13 +91,7 @@ class PokemonDetailPage extends StatelessWidget {
                   SizedBox(height: 10),
                   Row(
                     children: pokemon.typeOfPokemon
-                        .map(
-                          (e) => ElementSymbol(
-                            pokemonType: e.pokemonType,
-                            assetName: '',
-                            elementName: '',
-                          ),
-                        )
+                        .map((e) => ElementSymbol(pokemonType: e.pokemonType))
                         .toList(),
                   ),
                   SizedBox(height: 10),
@@ -136,13 +147,7 @@ class PokemonDetailPage extends StatelessWidget {
                   ),
                   Wrap(
                     children: pokemon.weaknesses
-                        .map(
-                          (e) => ElementSymbol(
-                            pokemonType: e.pokemonType,
-                            assetName: '',
-                            elementName: '',
-                          ),
-                        )
+                        .map((e) => ElementSymbol(pokemonType: e.pokemonType))
                         .toList(),
                   ),
                   SizedBox(height: 10),
@@ -215,11 +220,7 @@ class EvolutionTree extends StatelessWidget {
                       Wrap(
                         children: pokemon.typeOfPokemon
                             .map(
-                              (e) => ElementSymbol(
-                                pokemonType: e.pokemonType,
-                                assetName: '',
-                                elementName: '',
-                              ),
+                              (e) => ElementSymbol(pokemonType: e.pokemonType),
                             )
                             .toList(),
                       ),
