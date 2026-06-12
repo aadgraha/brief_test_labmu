@@ -189,7 +189,7 @@ class Pokemon {
 }
 
 enum PokemonType {
-  all,
+  alltype,
   water,
   dragon,
   electric,
@@ -198,15 +198,15 @@ enum PokemonType {
   fire,
   ice,
   grass,
-  insect,
-  fighter,
+  bug,
+  fighting,
   normal,
-  nocturnal,
-  metal,
-  stone,
+  dark,
+  steel,
+  rock,
   psychic,
-  terrestrial,
-  poisonous,
+  ground,
+  poison,
   flying,
 }
 
@@ -230,27 +230,27 @@ extension PokemonTypeParser on String {
       case 'grass':
         return PokemonType.grass;
       case 'bug':
-        return PokemonType.insect;
+        return PokemonType.bug;
       case 'fighting':
-        return PokemonType.fighter;
+        return PokemonType.fighting;
       case 'normal':
         return PokemonType.normal;
       case 'dark':
-        return PokemonType.nocturnal;
+        return PokemonType.dark;
       case 'steel':
-        return PokemonType.metal;
+        return PokemonType.steel;
       case 'rock':
-        return PokemonType.stone;
+        return PokemonType.rock;
       case 'psychic':
         return PokemonType.psychic;
       case 'ground':
-        return PokemonType.terrestrial;
+        return PokemonType.ground;
       case 'poison':
-        return PokemonType.poisonous;
+        return PokemonType.poison;
       case 'flying':
         return PokemonType.flying;
       default:
-        return PokemonType.all;
+        return PokemonType.alltype;
     }
   }
 }
@@ -258,7 +258,7 @@ extension PokemonTypeParser on String {
 extension PokemonTypeColor on PokemonType {
   Color get color {
     switch (this) {
-      case PokemonType.all:
+      case PokemonType.alltype:
         return Color(0xFF333333);
 
       case PokemonType.water:
@@ -285,31 +285,31 @@ extension PokemonTypeColor on PokemonType {
       case PokemonType.grass:
         return Color(0xFF63BC5A);
 
-      case PokemonType.insect:
+      case PokemonType.bug:
         return Color(0xFF91C12F);
 
-      case PokemonType.fighter:
+      case PokemonType.fighting:
         return Color(0xFFCE416B);
 
       case PokemonType.normal:
         return Color(0xFF919AA2);
 
-      case PokemonType.nocturnal:
+      case PokemonType.dark:
         return Color(0xFF5A5465);
 
-      case PokemonType.metal:
+      case PokemonType.steel:
         return Color(0xFF5A8EA2);
 
-      case PokemonType.stone:
+      case PokemonType.rock:
         return Color(0xFFC5B78C);
 
       case PokemonType.psychic:
         return Color(0xFFFA7179);
 
-      case PokemonType.terrestrial:
+      case PokemonType.ground:
         return Color(0xFFD97845);
 
-      case PokemonType.poisonous:
+      case PokemonType.poison:
         return Color(0xFFB567CE);
 
       case PokemonType.flying:

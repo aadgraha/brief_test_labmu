@@ -45,8 +45,18 @@ class PokemonCard extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(pokemon.name, style: TextStyle(fontSize: 24)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 5),
+                    child: Text(
+                      pokemon.name,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   Row(
                     children: pokemon.typeOfPokemon
                         .map((e) => ElementSymbol(pokemonType: e.pokemonType))
@@ -125,7 +135,7 @@ class ElementSymbol extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(5),
+      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(7),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(50)),

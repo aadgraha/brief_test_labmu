@@ -1,25 +1,5 @@
+import 'package:brief_test_labmu/src/app/model/pokemon.dart';
 import 'package:flutter/material.dart';
-
-enum PokemonType {
-  allType,
-  fire,
-  water,
-  grass,
-  electric,
-  ice,
-  fighting,
-  poison,
-  ground,
-  flying,
-  psychic,
-  bug,
-  rock,
-  ghost,
-  dragon,
-  dark,
-  steel,
-  fairy,
-}
 
 class PokemonTypeButton extends StatelessWidget {
   const PokemonTypeButton({super.key, this.onTap, required this.activeLabel});

@@ -56,7 +56,7 @@ class PokemonDetailPage extends StatelessWidget {
                                     ? '${pokemon.name} removed from favorites'
                                     : '${pokemon.name} added to favorites',
                               ),
-                              duration: const Duration(seconds: 2),
+                              duration: const Duration(seconds: 1),
                             ),
                           );
                           debugPrint(
@@ -89,12 +89,12 @@ class PokemonDetailPage extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        bottom: 0,
+                        bottom: -20,
                         left: 0,
                         right: 0,
                         child: SizedBox(
-                          height: 130,
-                          width: 130,
+                          height: 200,
+                          width: 200,
                           child: CachedNetworkImage(imageUrl: pokemon.imageUrl),
                         ),
                       ),
@@ -173,15 +173,26 @@ class PokemonDetailPage extends StatelessWidget {
                     child: Text('Evolution', style: TextStyle(fontSize: 28)),
                   ),
                   SizedBox(height: 10),
-                  ...pokemon.evolutions.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final isLast = index == pokemon.evolutions.length - 1;
-
-                    return EvolutionTree(
-                      pokemon: evolution[index],
-                      isLast: isLast,
-                    );
-                  }),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        ...pokemon.evolutions.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final isLast = index == pokemon.evolutions.length - 1;
+                          return EvolutionTree(
+                            pokemon: evolution[index],
+                            isLast: isLast,
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -193,66 +204,76 @@ class PokemonDetailPage extends StatelessWidget {
 }
 
 class EvolutionTree extends StatelessWidget {
-  const EvolutionTree({super.key, required this.pokemon, required this.isLast});
+  const EvolutionTree({
+    super.key,
+    required this.pokemon,
+    required this.isLast,
+    this.onTap,
+  });
 
   final Pokemon pokemon;
   final bool isLast;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 96,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(76)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: pokemon.typeOfPokemon.first.pokemonType.color,
-                      borderRadius: BorderRadius.all(Radius.circular(76)),
-                    ),
-                    child: Builder(
-                      builder: (context) {
-                        final path = pokemon.imageUrl;
-                        return CachedNetworkImage(imageUrl: path);
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(pokemon.name, style: TextStyle(fontSize: 22)),
-                      Wrap(
-                        children: pokemon.typeOfPokemon
-                            .map(
-                              (e) => ElementSymbol(pokemonType: e.pokemonType),
-                            )
-                            .toList(),
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 96,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.all(Radius.circular(76)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pokemon.typeOfPokemon.first.pokemonType.color,
+                        borderRadius: BorderRadius.all(Radius.circular(76)),
                       ),
-                    ],
+                      child: Builder(
+                        builder: (context) {
+                          final path = pokemon.imageUrl;
+                          return CachedNetworkImage(imageUrl: path);
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(pokemon.name, style: TextStyle(fontSize: 22)),
+                        Wrap(
+                          children: pokemon.typeOfPokemon
+                              .map(
+                                (e) =>
+                                    ElementSymbol(pokemonType: e.pokemonType),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Visibility(visible: !isLast, child: SizedBox(height: 10)),
-          Visibility(
-            visible: !isLast,
-            child: Icon(Icons.arrow_downward, color: Colors.blue, size: 35),
-          ),
-        ],
+            Visibility(visible: !isLast, child: SizedBox(height: 10)),
+            Visibility(
+              visible: !isLast,
+              child: Icon(Icons.arrow_downward, color: Colors.blue, size: 35),
+            ),
+          ],
+        ),
       ),
     );
   }

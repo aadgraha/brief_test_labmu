@@ -4,6 +4,7 @@ import 'package:brief_test_labmu/src/app/bloc/pokemon_fetch/pokemon_fetch_bloc.d
 import 'package:brief_test_labmu/src/app/view/page/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,6 +23,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: GoogleFonts.poppins().fontFamily,
+        textTheme: GoogleFonts.poppinsTextTheme(),
+      ),
       home: MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => MenuBloc()),
